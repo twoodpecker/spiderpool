@@ -88,7 +88,6 @@ jobs:
           for ITEM in $TAR_FILES ; do
               IMAGE_NAME=${ITEM%*.tar}
               echo ${IMAGE_NAME}
-              echo ${{ image_tag }}
               cat test/.download/${ITEM} | docker import - ${IMAGE_NAME}:${{ image_tag }}
               echo "---------trivy checkout image ${IMAGE_NAME}:${{ image_tag }} --------------------"
               make lint_image_trivy -e IMAGE_NAME=${IMAGE_NAME}:${{ image_tag }}  \
