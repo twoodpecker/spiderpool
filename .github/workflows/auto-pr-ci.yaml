@@ -199,6 +199,7 @@ jobs:
       image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
       push: false
       ref: ${{ needs.get_ref.outputs.ref }}
+      chart: ${{ needs.call_release_chart.outputs.artifact }}
     secrets: inherit
 
   call_e2e_ipv4:
@@ -210,6 +211,7 @@ jobs:
       image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
       push: false
       ref: ${{ needs.get_ref.outputs.ref }}
+      chart: ${{ needs.call_release_chart.outputs.artifact }}
     secrets: inherit
 
   call_e2e_ipv6:
@@ -221,4 +223,5 @@ jobs:
       image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
       push: false
       ref: ${{ needs.get_ref.outputs.ref }}
+      chart: ${{ needs.call_release_chart.outputs.artifact }}
     secrets: inherit

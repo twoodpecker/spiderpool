@@ -20,7 +20,9 @@ on:
       push:
         required: false
         type: boolean
-
+      charts:
+        required: false
+        type: string
 jobs:
   call_e2e:
     runs-on: ubuntu-latest
@@ -39,7 +41,7 @@ jobs:
           echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ image_tag }}"
           echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ image_tag }}-race"
           echo "===== chart "
-          echo "chart package artifact: ${{ needs.call_release_chart.outputs.artifact }}"
+          echo "chart package artifact: ${{ inputs.charts }}"
           TMP=` date +%m%d%H%M%S `
           E2E_CLUSTER_NAME="spiderpool${TMP}"
           echo ::set-output name=clusterName::${E2E_CLUSTER_NAME}
@@ -48,7 +50,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           persist-credentials: false
-          ref: ${{ needs.get_ref.outputs.ref }}
+          ref: ${{ inputs.ref.outputs.ref }}
 
       - name: Setup Golang
         uses: actions/setup-go@v3
@@ -115,7 +117,7 @@ jobs:
           echo ${{ github.event.inputs.labels }}
           RESULT=0
           make e2e_test -e E2E_CLUSTER_NAME=${{ steps.prepare.outputs.clusterName }}  \
-              -e E2E_GINKGO_LABELS=${{ needs.get_ref.outputs.e2e_labels }} \
+              -e E2E_GINKGO_LABELS=${{ inputs.ref.e2e_labels }} \
               -e E2E_TIMEOUT=${{ env.E2E_TIME_OUT }} \
               -e E2E_IP_FAMILY=${{ inputs.ip_family }} || RESULT=1
           if ((RESULT==0)) ; then
@@ -136,7 +138,7 @@ jobs:
           fi
 
       - name: Upload e2e log
-        if: ${{ needs.get_ref.outputs.ipfamily_dual_e2e == 'true' }}
+        if: ${{ inputs.ref.ipfamily_dual_e2e == 'true' }}
         uses: actions/upload-artifact@v3.1.1
         with:
           name: ${{ inputs.ip_family }}-debuglog.txt
