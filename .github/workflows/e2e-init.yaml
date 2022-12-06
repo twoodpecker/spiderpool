@@ -77,7 +77,6 @@ jobs:
           path: test/.download
 
       - name: Load And Scan Images
-        if: ${{ inputs.ip_family == 'dual' }}
         run: |
           TAR_FILES=` ls test/.download `
           echo $TAR_FILES
@@ -85,7 +84,8 @@ jobs:
               echo "123"
               IMAGE_NAME=${ITEM%*.tar}
               echo "456"
-              cat test/.download/${ITEM} |  docker import - ${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }}
+              cat test/.download/${ITEM}
+              docker import - ${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }}
               echo "789"
               echo "---------trivy checkout image ${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }} --------------------"
               make lint_image_trivy -e IMAGE_NAME=${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }}  \

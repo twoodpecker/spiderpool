@@ -196,6 +196,7 @@ jobs:
     uses: ./.github/workflows/e2e-init.yaml
     with:
       ip_family: dual
+      push: false
       ref: ${{ needs.get_ref.outputs.ref }}
     secrets: inherit
 
@@ -205,6 +206,7 @@ jobs:
     uses: ./.github/workflows/e2e-init.yaml
     with:
       ip_family: ipv4
+      push: false
       ref: ${{ needs.get_ref.outputs.ref }}
     secrets: inherit
 
@@ -214,5 +216,6 @@ jobs:
     uses: ./.github/workflows/e2e-init.yaml
     with:
       ip_family: ipv6
+      push: false
       ref: ${{ needs.get_ref.outputs.ref }}
     secrets: inherit
