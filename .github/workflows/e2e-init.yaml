@@ -82,13 +82,16 @@ jobs:
           TAR_FILES=` ls test/.download `
           echo $TAR_FILES
           for ITEM in $TAR_FILES ; do
+              echo "123"
               IMAGE_NAME=${ITEM%*.tar}
+              echo "456"
               cat test/.download/${ITEM} |  docker import - ${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }}
+              echo "789"
               echo "---------trivy checkout image ${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }} --------------------"
               make lint_image_trivy -e IMAGE_NAME=${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }}  \
                   || { echo "RUN_IMAGE_TRIVY_FAIL=true" >> $GITHUB_ENV ; echo "error, image ${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }} is bad" ; }
           done
-            # ------------- by default , dual stack
+          # ------------- by default , dual stack
 
       # test against commit version
       - name: Setup Kind Cluster
@@ -106,7 +109,6 @@ jobs:
 
       - name: Run e2e Test
         id: run_e2e
-        if: ${{ needs.get_ref.outputs.ipfamily_dual_e2e == 'true' }}
         continue-on-error: true
         run: |
           echo ${{ github.event.inputs.labels }}
@@ -140,7 +142,7 @@ jobs:
           path: test/e2edebugLog.txt
           retention-days: 7
 
-      - name: Upload e2e report For Dual-stack
+      - name: Upload e2e report
         uses: actions/upload-artifact@v3.1.1
         with:
           name: ${{ inputs.ip_family }}-e2ereport.json
