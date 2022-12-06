@@ -11,6 +11,9 @@ on:
       ip_family:
         required: true
         type: string
+      image_tag:
+        required: true
+        type: string
       ref:
         required: false
         type: string
@@ -31,10 +34,10 @@ jobs:
           echo "ipfamily_ipv6only_e2e: ${{ needs.get_ref.outputs.ipfamily_ipv6only_e2e }}"
           echo "ipfamily_dual_e2e: ${{ needs.get_ref.outputs.ipfamily_dual_e2e }}"
           echo "===== image "
-          echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ needs.call_build_ci_image.outputs.imageTag }}"
-          echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ needs.call_build_ci_image.outputs.imageTag }}-race"
-          echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ needs.call_build_ci_image.outputs.imageTag }}"
-          echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ needs.call_build_ci_image.outputs.imageTag }}-race"
+          echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ image_tag }}"
+          echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ image_tag }}-race"
+          echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ image_tag }}"
+          echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ image_tag }}-race"
           echo "===== chart "
           echo "chart package artifact: ${{ needs.call_release_chart.outputs.artifact }}"
           TMP=` date +%m%d%H%M%S `
@@ -83,11 +86,11 @@ jobs:
           for ITEM in $TAR_FILES ; do
               IMAGE_NAME=${ITEM%*.tar}
               echo ${IMAGE_NAME}
-              echo ${{ needs.call_build_ci_image.outputs.imageTag }}
-              cat test/.download/${ITEM} | docker import - ${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }}
-              echo "---------trivy checkout image ${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }} --------------------"
-              make lint_image_trivy -e IMAGE_NAME=${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }}  \
-                  || { echo "RUN_IMAGE_TRIVY_FAIL=true" >> $GITHUB_ENV ; echo "error, image ${IMAGE_NAME}:${{ needs.call_build_ci_image.outputs.imageTag }} is bad" ; }
+              echo ${{ image_tag }}
+              cat test/.download/${ITEM} | docker import - ${IMAGE_NAME}:${{ image_tag }}
+              echo "---------trivy checkout image ${IMAGE_NAME}:${{ image_tag }} --------------------"
+              make lint_image_trivy -e IMAGE_NAME=${IMAGE_NAME}:${{ image_tag }}  \
+                  || { echo "RUN_IMAGE_TRIVY_FAIL=true" >> $GITHUB_ENV ; echo "error, image ${IMAGE_NAME}:${{ image_tag }} is bad" ; }
           done
           # ------------- by default , dual stack
 
@@ -100,7 +103,7 @@ jobs:
           shell: bash
           command: |
             make e2e_init -e E2E_CLUSTER_NAME=${{ steps.prepare.outputs.clusterName }} \
-                -e TEST_IMAGE_TAG=${{ needs.call_build_ci_image.outputs.imageTag }} \
+                -e TEST_IMAGE_TAG=${{ image_tag }} \
                 -e SPIDERPOOL_AGENT_IMAGE_NAME=spiderpool-agent-race   \
                 -e SPIDERPOOL_CONTROLLER_IMAGE_NAME=spiderpool-controller-race \
                 -e E2E_IP_FAMILY=${{ inputs.ip_family }} -e PYROSCOPE_LOCAL_PORT=""
