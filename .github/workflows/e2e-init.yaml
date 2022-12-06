@@ -36,10 +36,10 @@ jobs:
           echo "ipfamily_ipv6only_e2e: ${{ inputs.ref.ipfamily_ipv6only_e2e }}"
           echo "ipfamily_dual_e2e: ${{ inputs.ref.ipfamily_dual_e2e }}"
           echo "===== image "
-          echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ image_tag }}"
-          echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ image_tag }}-race"
-          echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ image_tag }}"
-          echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ image_tag }}-race"
+          echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ inputs.image_tag }}"
+          echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ inputs.image_tag }}-race"
+          echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ inputs.image_tag }}"
+          echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ inputs.image_tag }}-race"
           echo "===== chart "
           echo "chart package artifact: ${{ inputs.charts }}"
           TMP=` date +%m%d%H%M%S `
@@ -88,10 +88,10 @@ jobs:
           for ITEM in $TAR_FILES ; do
               IMAGE_NAME=${ITEM%*.tar}
               echo ${IMAGE_NAME}
-              cat test/.download/${ITEM} | docker import - ${IMAGE_NAME}:${{ image_tag }}
-              echo "---------trivy checkout image ${IMAGE_NAME}:${{ image_tag }} --------------------"
-              make lint_image_trivy -e IMAGE_NAME=${IMAGE_NAME}:${{ image_tag }}  \
-                  || { echo "RUN_IMAGE_TRIVY_FAIL=true" >> $GITHUB_ENV ; echo "error, image ${IMAGE_NAME}:${{ image_tag }} is bad" ; }
+              cat test/.download/${ITEM} | docker import - ${IMAGE_NAME}:${{ inputs.image_tag }}
+              echo "---------trivy checkout image ${IMAGE_NAME}:${{ inputs.image_tag }} --------------------"
+              make lint_image_trivy -e IMAGE_NAME=${IMAGE_NAME}:${{ inputs.image_tag }}  \
+                  || { echo "RUN_IMAGE_TRIVY_FAIL=true" >> $GITHUB_ENV ; echo "error, image ${IMAGE_NAME}:${{ inputs.image_tag }} is bad" ; }
           done
           # ------------- by default , dual stack
 
@@ -104,7 +104,7 @@ jobs:
           shell: bash
           command: |
             make e2e_init -e E2E_CLUSTER_NAME=${{ steps.prepare.outputs.clusterName }} \
-                -e TEST_IMAGE_TAG=${{ image_tag }} \
+                -e TEST_IMAGE_TAG=${{ inputs.image_tag }} \
                 -e SPIDERPOOL_AGENT_IMAGE_NAME=spiderpool-agent-race   \
                 -e SPIDERPOOL_CONTROLLER_IMAGE_NAME=spiderpool-controller-race \
                 -e E2E_IP_FAMILY=${{ inputs.ip_family }} -e PYROSCOPE_LOCAL_PORT=""
