@@ -189,6 +189,17 @@ jobs:
       ref: ${{ needs.get_ref.outputs.ref }}
       submit: false
     secrets: inherit
+  
+  e2e_issue:
+    needs: [call_build_ci_image, get_ref, call_release_chart]
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo
+        run: |
+          echo ${{ github.repository }}
+          echo ${{ github.repository_owner }}
+          echo "TIMESTAMP=`date +%Y-%m-%d`" >> $GITHUB_ENV
+          echo ${{ needs.call_build_ci_image.outputs.imageTag }}
 
   call_e2e_dual:
     needs: [call_build_ci_image, get_ref, call_release_chart]
