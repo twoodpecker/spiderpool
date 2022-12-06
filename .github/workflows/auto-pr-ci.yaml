@@ -1,10 +1,5 @@
 name: Auto PR E2E CI
 
-env:
-  CLUSTER_NAME: spider
-  E2E_TIME_OUT: 60m
-  PERFORMANCESCRIPT: "./tools/scripts/e2eperformance.sh"
-
 permissions: write-all
 
 on:
@@ -158,14 +153,14 @@ jobs:
           ref=$( git show -s --format='format:%H')
           echo ::set-output name=ref::${ref}
 
-  call_unitest:
-    needs: get_ref
-    if: ${{ needs.get_ref.outputs.unitest_enabled == 'true' }}
-    # forbid to specify version for local workflow, GITHUB_REF Same as the caller workflow
-    uses: ./.github/workflows/lint-golang.yaml
-    with:
-      ref: ${{ needs.get_ref.outputs.ref }}
-    secrets: inherit
+  # call_unitest:
+  #   needs: get_ref
+  #   if: ${{ needs.get_ref.outputs.unitest_enabled == 'true' }}
+  #   # forbid to specify version for local workflow, GITHUB_REF Same as the caller workflow
+  #   uses: ./.github/workflows/lint-golang.yaml
+  #   with:
+  #     ref: ${{ needs.get_ref.outputs.ref }}
+  #   secrets: inherit
 
   call_build_ci_image:
     needs: [get_ref]
