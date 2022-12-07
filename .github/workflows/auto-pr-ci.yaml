@@ -40,7 +40,6 @@ jobs:
       ipfamily_ipv4only_e2e: ${{ steps.get_ref.outputs.ipfamily_ipv4only_e2e }}
       ipfamily_ipv6only_e2e: ${{ steps.get_ref.outputs.ipfamily_ipv6only_e2e }}
       ipfamily_dual_e2e: ${{ steps.get_ref.outputs.ipfamily_dual_e2e }}
-      e2e_reliability_changed: ${{ steps.get_ref.outputs.e2e_reliablility }}
     steps:
       - name: Check Code Changes
         uses: dorny/paths-filter@v2.11.1
@@ -62,13 +61,10 @@ jobs:
             all_e2e:
               - 'test/**'
               - 'vendor/github.com/spidernet-io/**/*.go'
-            e2e_reliablility:
-              - 'test/e2e/reliability/*'
 
       - name: Get Ref
         id: get_ref
         run: |
-          echo ::set-output name=e2e_reliability_changed::${{ steps.filter_pr.outputs.e2e_reliablility }}
           if ${{ github.event_name == 'workflow_dispatch' }} ; then
             echo "call by self workflow_dispatch"
             echo ::set-output name=tag::${{ github.event.inputs.ref }}
