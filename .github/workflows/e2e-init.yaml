@@ -17,7 +17,7 @@ on:
       image_tag:
         required: true
         type: string
-      call_release_chart:
+      call_chart:
         required: true
         type: string
       push:
@@ -42,7 +42,7 @@ jobs:
           echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ inputs.image_tag }}"
           echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-agent-ci:${{ inputs.image_tag }}-race"
           echo "===== chart "
-          echo "chart package artifact: ${{ inputs.call_release_chart }}"
+          echo "chart package artifact: ${{ inputs.call_chart }}"
           TMP=` date +%m%d%H%M%S `
           E2E_CLUSTER_NAME="spiderpool${TMP}"
           echo ::set-output name=clusterName::${E2E_CLUSTER_NAME}
