@@ -198,7 +198,7 @@ jobs:
       ip_family: dual
       image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
       push: false
-      ref: ${{ needs.get_ref.outputs.ref }}
+      ref: ${{ needs.get_ref.outputs }}
       charts: ${{ needs.call_release_chart.outputs.artifact }}
     secrets: inherit
 
@@ -210,7 +210,7 @@ jobs:
       ip_family: ipv4
       image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
       push: false
-      ref: ${{ needs.get_ref.outputs.ref }}
+      ref: ${{ needs.get_ref.outputs }}
       charts: ${{ needs.call_release_chart.outputs.artifact }}
     secrets: inherit
 
@@ -222,6 +222,6 @@ jobs:
       ip_family: ipv6
       image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
       push: false
-      ref: ${{ needs.get_ref.outputs.ref }}
+      ref: ${{ needs.get_ref.outputs }}
       charts: ${{ needs.call_release_chart.outputs.artifact }}
     secrets: inherit
