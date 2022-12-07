@@ -32,10 +32,6 @@ jobs:
         id: prepare
         run: |
           echo "ref: ${{ inputs.ref }} "
-          echo "e2e_labels: ${{ inputs.e2e_labels }}"
-          echo "ipfamily_ipv4only_e2e: ${{ inputs.ipfamily_ipv4only_e2e }}"
-          echo "ipfamily_ipv6only_e2e: ${{ inputs.ipfamily_ipv6only_e2e }}"
-          echo "ipfamily_dual_e2e: ${{ inputs.ipfamily_dual_e2e }}"
           echo "===== image "
           echo "ci image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ inputs.image_tag }}"
           echo "ci race image tag: ghcr.io/${{ github.repository }}/spiderpool-controller-ci:${{ inputs.image_tag }}-race"
