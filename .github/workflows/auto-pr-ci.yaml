@@ -198,8 +198,8 @@ jobs:
       ip_family: dual
       image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
       push: false
-      ref: ${{ needs.get_ref.outputs }}
-      call_chart: ${{ needs.call_release_chart.outputs.artifact }}
+      ref: ${{ needs.get_ref.outputs.ref }}
+      charts: ${{ needs.call_release_chart.outputs.artifact }}
     secrets: inherit
 
   call_e2e_ipv4:
@@ -210,8 +210,8 @@ jobs:
       ip_family: ipv4
       image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
       push: false
-      ref: ${{ needs.get_ref.outputs }}
-      call_chart: ${{ needs.call_release_chart.outputs.artifact }}
+      ref: ${{ needs.get_ref.outputs.ref }}
+      charts: ${{ needs.call_release_chart.outputs.artifact }}
     secrets: inherit
 
   call_e2e_ipv6:
@@ -222,6 +222,6 @@ jobs:
       ip_family: ipv6
       image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
       push: false
-      ref: ${{ needs.get_ref.outputs }}
-      call_chart: ${{ needs.call_release_chart.outputs.artifact }}
+      ref: ${{ needs.get_ref.outputs.ref }}
+      charts: ${{ needs.call_release_chart.outputs.artifact }}
     secrets: inherit
