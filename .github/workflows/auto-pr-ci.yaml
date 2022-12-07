@@ -204,7 +204,7 @@ jobs:
 
   call_e2e_ipv4:
     needs: [call_build_ci_image, get_ref, call_release_chart]
-    if: ${{ needs.get_ref.outputs.e2e_enabled == 'true' }}
+    if: ${{ needs.get_ref.outputs.e2e_enabled == 'true' && needs.get_ref.outputs.ipfamily_ipv4only_e2e == 'true' }}
     uses: ./.github/workflows/e2e-init.yaml
     with:
       ip_family: ipv4
@@ -220,7 +220,7 @@ jobs:
     uses: ./.github/workflows/e2e-init.yaml
     with:
       ip_family: ipv6
-      image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
+      image_tag: ${{ needs.call_build_ci_image.outputs.imageTag && needs.get_ref.outputs.ipfamily_ipv6only_e2e == 'true' }}
       push: false
       ref: ${{ needs.get_ref.outputs }}
       charts: ${{ needs.call_release_chart.outputs.artifact }}

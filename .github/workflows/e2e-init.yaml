@@ -138,7 +138,7 @@ jobs:
           fi
 
       - name: Upload e2e log
-        if: ${{ inputs.ref.ipfamily_dual_e2e == 'true' }}
+        if: ${{ steps.run_e2e.outputs.updaloadlog == 'true' }}
         uses: actions/upload-artifact@v3.1.1
         with:
           name: ${{ inputs.ip_family }}-debuglog.txt
@@ -146,6 +146,7 @@ jobs:
           retention-days: 7
 
       - name: Upload e2e report
+        if: ${{ steps.run_e2e.outputs.upload == 'true' }}
         uses: actions/upload-artifact@v3.1.1
         with:
           name: ${{ inputs.ip_family }}-e2ereport.json
