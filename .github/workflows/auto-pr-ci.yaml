@@ -192,7 +192,7 @@ jobs:
 
   call_e2e_dual:
     needs: [call_build_ci_image, get_ref, call_release_chart]
-    if: ${{ needs.get_ref.outputs.e2e_enabled == 'true' }}
+    if: ${{ needs.get_ref.outputs.e2e_enabled == 'true' && needs.get_ref.outputs.ipfamily_dual_e2e == 'true' }}
     uses: ./.github/workflows/e2e-init.yaml
     with:
       ip_family: dual
