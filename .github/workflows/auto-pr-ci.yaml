@@ -188,7 +188,7 @@ jobs:
   
   trivy_scan_images:
     runs-on: ubuntu-latest
-    needs: [call_build_ci_image, get_ref]
+    needs: [call_build_ci_image, get_ref,call_release_chart]
     if: ${{ needs.get_ref.outputs.e2e_enabled == 'true' }}
     steps:
       - name: Download spiderpool-agent image
