@@ -191,6 +191,11 @@ jobs:
     needs: [call_build_ci_image, get_ref,call_release_chart]
     if: ${{ needs.get_ref.outputs.e2e_enabled == 'true' }}
     steps:
+      - name: Install Tools
+        run: |
+          # install kind/p2ctl/helm/ginkgo
+          bash ./test/scripts/install-tools.sh
+          
       - name: Download spiderpool-agent image
         uses: actions/download-artifact@v3
         with:
