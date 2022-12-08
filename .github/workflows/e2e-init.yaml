@@ -78,7 +78,7 @@ jobs:
           name: image-tar-spiderpool-controller
           path: test/.download
 
-      - name: Load And Scan Images
+      - name: Docker load Images
         run: |
           TAR_FILES=` ls test/.download `
           echo $TAR_FILES
@@ -86,11 +86,7 @@ jobs:
               IMAGE_NAME=${ITEM%*.tar}
               echo ${IMAGE_NAME}
               cat test/.download/${ITEM} | docker import - ${IMAGE_NAME}:${{ inputs.image_tag }}
-              echo "---------trivy checkout image ${IMAGE_NAME}:${{ inputs.image_tag }} --------------------"
-              make lint_image_trivy -e IMAGE_NAME=${IMAGE_NAME}:${{ inputs.image_tag }}  \
-                  || { echo "RUN_IMAGE_TRIVY_FAIL=true" >> $GITHUB_ENV ; echo "error, image ${IMAGE_NAME}:${{ inputs.image_tag }} is bad" ; }
           done
-          # ------------- by default , dual stack
 
       # test against commit version
       - name: Setup Kind Cluster
@@ -177,12 +173,3 @@ jobs:
           label: performance
           message: ${{ steps.get_performance.outputs.result }}
           color: lightgrey
-
-      - name: Show Trivy Scan Report
-        run: |
-          if [ "${{ env.RUN_IMAGE_TRIVY_FAIL }}" == "true" ] ; then
-              echo "error, image is not secure, see detail on Step 'Load And Scan Images' "
-              exit 1
-          else
-              exit 0
-          fi
