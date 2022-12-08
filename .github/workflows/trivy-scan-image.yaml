@@ -1,4 +1,4 @@
-name: scan image
+name: Scan Image
 
 on:
   workflow_call:
