@@ -1,9 +1,4 @@
-name: trivy scan image
-
-env:
-  CLUSTER_NAME: spider
-  E2E_TIME_OUT: 60m
-  PERFORMANCESCRIPT: "./tools/scripts/e2eperformance.sh"
+name: scan image
 
 on:
   workflow_call:
