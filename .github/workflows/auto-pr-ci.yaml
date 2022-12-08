@@ -186,6 +186,16 @@ jobs:
       submit: false
     secrets: inherit
 
+  trivy_scan_image:
+    needs: [call_build_ci_image, get_ref, call_release_chart]
+    if: ${{ needs.get_ref.outputs.e2e_enabled == 'true' }}
+    uses: ./.github/workflows/trivy-scan-image.yaml
+    with:
+      image_tag: ${{ needs.call_build_ci_image.outputs.imageTag }}
+      push: false
+      ref: ${{ needs.get_ref.outputs.ref }}
+    secrets: inherit
+
   call_e2e_dual:
     needs: [call_build_ci_image, get_ref, call_release_chart]
     if: ${{ needs.get_ref.outputs.e2e_enabled == 'true' && needs.get_ref.outputs.ipfamily_dual_e2e == 'true' }}
